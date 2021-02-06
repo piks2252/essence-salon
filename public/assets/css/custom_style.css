@@ -1,0 +1,29 @@
+/* Affirmation quote page start */
+.dataTables_length{
+    display: block;
+    margin-right: 20px;
+}
+.dataTables_info{
+    margin-left: 20px;
+}
+.dataTables_paginate{
+    margin-right: 20px;
+}
+.color_red{
+    color:red;
+}
+.color_green{
+    color: green;
+}
+/* Affirmation quote page end */
+@media (max-width: 768px){
+    .affirmation-quote .dataTables_length{
+        margin-right: 0;
+    }
+    .dataTables_info{
+        margin-left: 0;
+    }
+    .dataTables_paginate{
+        margin-right: 0;
+    }
+}

@@ -1,0 +1,32 @@
+body{
+    font-size: 48px;
+    padding: 10px;
+}
+.bg-img{
+    background-image:url('../images/background_gradient.jpg');
+    background-repeat: no-repeat; 
+    background-size: cover
+}
+ol {
+    counter-reset: item;
+}
+ol > li {
+    counter-increment: item;
+    padding: 10px 0;
+}
+ol > li > p {
+    padding-left: 20px;
+}
+
+ol ol > li {
+    display: block;
+}
+
+ol ol > li:before {
+    content: counters(item, ".") ". ";
+    margin-left: -20px;
+}
+ul > li{
+    list-style: none;
+    padding: 10px 0;
+}
