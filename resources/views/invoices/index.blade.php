@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '| Clients')
+@section('title', '| Invoices')
 
 {{--  @section('head_style')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/buttons.dataTables.min.css')}}">
@@ -8,7 +8,7 @@
 
 @section('theme_script')
     <script type="text/javascript" src="{{ asset('assets/js/plugins/tables/datatables/datatables.min.js') }}"></script>
-    <script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/plugins/forms/selects/select2.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/pages/datatables_basic.js') }}"></script>
 @endsection
 @section('content')
@@ -19,10 +19,10 @@
                 <div class="page-header-content">
                     <div class="page-title" style="padding-right:0">
                         <div style="display:inline-block">
-                            <h4>Clients</h4>
+                            <h4>Invoices</h4>
                         </div>
                         <div class="pull-right">
-                            <a href="{{ route('clients.create') }}">
+                            <a href="{{ route('invoices.create') }}">
                                 <span class="btn btn-success btn-xs position-right"><i class="fa fa-plus"></i>Create New</span>
                             </a>
                         </div>
@@ -56,6 +56,7 @@
                                     <th>Services</th>
                                     <th>Discount</th>
                                     <th>Total Amount</th>
+                                    <th>Visit Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -75,15 +76,16 @@
                                                 <div>{{ $val["services"]["service_name"] }}</div>
                                             @endforeach
                                         </td>
-                                        <td>{{ $data->discount }}</td>
-                                        <td>{{ $data->total_amount }}</td>
+                                        <td>{{ $data->discount }}%</td>
+                                        <td>RS {{ $data->total_amount }}</td>
+                                        <td>{{ $data->created_at }}</td>
                                         <td>
                                             <ul class="icons-list btn-size">
-                                                <li>
+                                                <!-- <li>
                                                     <a href="{{ route('invoices.edit', $data->id) }}">
                                                         <i class="glyphicon glyphicon-pencil"></i>
                                                     </a>
-                                                </li>
+                                                </li> -->
                                                 <li>
                                                     <form action="{{ route('invoices.destroy', $data->id)}}" method="post">
                                                     @csrf

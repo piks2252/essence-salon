@@ -22,11 +22,7 @@ class InvoiceController extends Controller {
     }
 
 	public function index(Request $request) {
-		$datas = Invoice::with('clients','clientServices','clientServices.services','clientServices.operator')->get();
-		// foreach ($datas->toArray() as $key => $value) {
-		// 	# code...
-		// dd($value["client_services"]);
-		// }		
+		$datas = Invoice::with('clients','clientServices','clientServices.services','clientServices.operator')->get();		
 		return view('invoices.index',compact('datas'));
 	}
 
@@ -78,8 +74,9 @@ class InvoiceController extends Controller {
 	}
 
 	public function edit($id) {
-		$services = Service::where('id', $id)->first();
-		return view('services.create', compact('services'));
+		$data = Invoice::where('id', $id)->with('clients','clientServices','clientServices.services','clientServices.operator')->first();
+		dd($data->toArray());
+		return view('invoices.create', compact('data'));
 	}
 
 	public function update(Request $request, $id) {
@@ -107,8 +104,12 @@ class InvoiceController extends Controller {
 
 	public function destroy($id) {
 		try {
-			$client = Service::findOrFail($id);
-			$client->delete();
+			DB::transaction(function() use($id) {
+				$invoice = Invoice::findOrFail($id);
+				$invoice->delete();
+
+				$client_services = ClientService::where('invoice_id',$id)->delete();
+			});
 			return redirect()->back()->with('success','Service Deleted successfully');
 
 		} catch (Exception $e) {
