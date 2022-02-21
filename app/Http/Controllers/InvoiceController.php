@@ -13,6 +13,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Validator;
 use DB;
+use Carbon\CarbonPeriod;
 
 class InvoiceController extends Controller {
 
@@ -22,8 +23,16 @@ class InvoiceController extends Controller {
     }
 
 	public function index(Request $request) {
-		$datas = Invoice::with('clients','clientServices','clientServices.services','clientServices.operator')->get();		
-		return view('invoices.index',compact('datas'));
+		$datas = Invoice::with('clients','clientServices','clientServices.services','clientServices.operator');
+		$operators = Staff::all();
+		if($request->startDate){
+			$datas = $datas->where('created_at', '>=' , $request->startDate);
+		}
+		if($request->endDate){
+			$datas = $datas->where('created_at', '<=' , $request->endDate);
+		}
+		$datas = $datas->get();		
+		return view('invoices.index',compact('datas','operators'));
 	}
 
 	public function create() {
@@ -40,7 +49,6 @@ class InvoiceController extends Controller {
 			'total_amount' => 'required|numeric|min:0',
 			'client_services.*.service_id' => 'required|numeric|min:0',
 			'client_services.*.operator_id' => 'required|numeric|min:0',
-			'client_services.*.service_price' => 'required|numeric|min:0'
 		]);
 
 		if ($validator->fails()) {
@@ -111,6 +119,30 @@ class InvoiceController extends Controller {
 				$client_services = ClientService::where('invoice_id',$id)->delete();
 			});
 			return redirect()->back()->with('success','Service Deleted successfully');
+
+		} catch (Exception $e) {
+			return redirect()->back()->withErrors($e->getMessage());
+		}
+	}
+
+	public function report(Request $request) {
+		try {
+			$period = CarbonPeriod::create(\Carbon\Carbon::now()->subYears(1)->toDateString(), '1 month', \Carbon\Carbon::now()->toDateString());
+			$labels = collect($period)->map(function ($date) {
+			   return  \carbon\Carbon::parse($date)->format('M-Y');
+			})->toArray();
+
+			$report = ClientService::select(DB::raw("count(*) as services"), DB::raw("YEAR(client_services.created_at) year, MONTH(client_services.created_at) month, CONCAT(MONTH(client_services.created_at),'-' ,YEAR(client_services.created_at)) as label, staff.name as operator"))
+					  ->join('staff', 'client_services.operator_id', '=', 'staff.id')
+					  ->join('services', 'client_services.service_id', '=', 'services.id');
+					  	$report->where('client_services.created_at','>=', \Carbon\Carbon::now()->subYears(1));
+					  	$report->where('client_services.created_at','<=', \Carbon\Carbon::now());
+					  $report = $report->groupBy('year','month')
+					  ->get();
+			$report = $report->groupby('operator');
+			dd($report->toArray());
+			return response()->json(['report'=>$report]);
+
 
 		} catch (Exception $e) {
 			return redirect()->back()->withErrors($e->getMessage());

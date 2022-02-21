@@ -1,7 +1,7 @@
 $(function () {
-    $.validator.addMethod("email", function(value, element, param) {
+    $.validator.addMethod("email", function (value, element, param) {
         return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
-    },'Please insert valid email address');
+    }, 'Please insert valid email address');
 
     $("form[name='staff_form']").validate({
         errorElement: "span",
@@ -16,6 +16,7 @@ $(function () {
             },
             contact: {
                 required: true,
+                digits: true
             },
             date_of_birth: {
                 required: true,

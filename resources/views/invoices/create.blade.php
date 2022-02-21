@@ -206,7 +206,7 @@
                 var operator = $('#operator_id').select2('data');
                 var price=service.data("price");
                 var id = 0;
-                client_services.push({ service_id:service.val(), operator_id: operator[0].id, service_price: price })
+                client_services.push({ service_id:service.val(), operator_id: operator[0].id })
                 let html = '<tr><td>'+(id+1)+'</td><td>'+service.text()+'</td><td>'+operator[0].text+'</td><td class="price">'+price+'</td><td><button class="btn remove_service" ><a class="label label-danger"><i class="fa fa-minus"> </i></a></td></tr>';
                 id++;
                 t.row.add($(html)).draw();

@@ -19,7 +19,6 @@ class ClientController extends Controller {
 
 	public function index(Request $request) {
 		$clients = Client::select('*')->get();
-		// return $clients;
 		return view('clients.index',compact('clients'));
 	}
     
@@ -32,8 +31,8 @@ class ClientController extends Controller {
 			'name' => 'required',
 			'gender' => 'required',
 			'contact' => 'required|unique:client',
-			'date_of_birth' => 'nullable|date_format:d-m-y',
-			'date_of_aniversary' => 'nullable|date_format:d-m-y',
+			'date_of_birth' => 'nullable|date_format:Y-m-d',
+			'date_of_aniversary' => 'nullable|date_format:Y-m-d',
 		]);
 
 		if ($validator->fails()) {
@@ -75,7 +74,6 @@ class ClientController extends Controller {
 		}
 
 		try {
-			// dd($request->all());
 			$client = Client::findOrFail($id);
 			$client->name = $request['name'];
 			$client->gender = $request['gender'];

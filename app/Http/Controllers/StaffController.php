@@ -19,7 +19,6 @@ class StaffController extends Controller {
 
 	public function index(Request $request) {
 		$datas = Staff::select('*')->get();
-		// return $clients;
 		return view('staff.index',compact('datas'));
 	}
     
@@ -28,7 +27,6 @@ class StaffController extends Controller {
     }
 
 	public function store(Request $request) {
-		// dd($request->all());
 		$validator = Validator::make($request->all(), [
 			'name' => 'required',
 			'gender' => 'required',
@@ -72,7 +70,6 @@ class StaffController extends Controller {
 	}
 
 	public function update(Request $request, $id) {
-		// dd($request->all());
 		$validator = Validator::make($request->all(), [
 			'name' => 'required',
 			'gender' => 'required',
@@ -94,12 +91,10 @@ class StaffController extends Controller {
 			$client->address = $request['address'];
 			$client->date_of_birth = $request['date_of_birth'];
 			$image = $request->file('goverment_proof_id');
-			// dd($request->all());
 			if(!empty($image)){
                 $fileName = $request['name'].'-' . date('YmdHsi') . '.' . $image->getClientOriginalExtension();
 
                 $destinationPath = public_path() . '/assets/images/goverment-ids/';
-                // dd($destinationPath . $client->goverment_proof_id);
                     if (!empty($client->goverment_proof_id) && file_exists($destinationPath . $client->goverment_proof_id)) {
                 		chmod($destinationPath . $client->goverment_proof_id, 0777); 
                         unlink($destinationPath . $client->goverment_proof_id);

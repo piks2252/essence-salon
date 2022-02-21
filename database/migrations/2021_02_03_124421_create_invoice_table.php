@@ -17,6 +17,8 @@ class CreateInvoiceTable extends Migration
             $table->bigIncrements('id');
             $table->integer('client_id');
             $table->string('invoice_no');
+            $table->integer('discount')->nullable();
+            $table->integer('total_amount');
             $table->timestamps();
             $table->softDeletes()->nullable();
 
